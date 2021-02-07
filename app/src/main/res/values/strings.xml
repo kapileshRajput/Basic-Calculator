@@ -16,4 +16,6 @@
     <string name="multiply_label">*</string>
     <string name="minus_label">-</string>
     <string name="dot_label">.</string>
+    <string name="buttonNeg_label">NEG</string>
+    <string name="buttonClr_label">clr</string>
 </resources>

@@ -54,6 +54,30 @@ class MainActivity : AppCompatActivity() {
         buttonMultiply.setOnClickListener(opLlistener)
         buttonPlus.setOnClickListener(opLlistener)
 
+        buttonNeg.setOnClickListener {
+            val value = newNumber.text.toString()
+            if (value.isEmpty()) {
+                newNumber.setText("-")
+            } else {
+                try {
+                    var doubleValue = value.toDouble()
+                    doubleValue *= -1
+                    newNumber.setText(doubleValue.toString())
+                } catch (e: java.lang.NumberFormatException) {
+                    // newNumber was "-" or ".", so clear it
+                    newNumber.setText("")
+                }
+            }
+        }
+
+        buttonclr.setOnClickListener {
+            operand1 = null
+            pendingOperation = "="
+            operation.text = pendingOperation
+            result.setText("")
+            newNumber.setText("")
+        }
+
     }
 
     private fun performOperation(value: Double, operation: String) {
@@ -66,22 +90,26 @@ class MainActivity : AppCompatActivity() {
 
             when (pendingOperation) {
                 "=" -> operand1 = value
-                "/" -> operand1 = if (value == 0.0) { Double.NaN } else { operand1!! / value }
+                "/" -> operand1 = if (value == 0.0) {
+                    Double.NaN
+                } else {
+                    operand1!! / value
+                }
                 "*" -> operand1 = operand1!! * value
                 "-" -> operand1 = operand1!! - value
                 "+" -> operand1 = operand1!! + value
             }
-            result.setText(operand1.toString())
-            newNumber.setText("")
         }
+        result.setText(operand1.toString())
+        newNumber.setText("")
     }
 
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        operand1 = if (savedInstanceState.getBoolean(STATE_OPERAND_1_STORED, false)){
+        operand1 = if (savedInstanceState.getBoolean(STATE_OPERAND_1_STORED, false)) {
             savedInstanceState.getDouble(STATE_OPERAND_1)
-        }else{
+        } else {
             null
         }
         pendingOperation = savedInstanceState.getString(STATE_PENDING_OPERATION, "=")
@@ -90,7 +118,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        if (operand1 != null){
+        if (operand1 != null) {
             outState.putDouble(STATE_OPERAND_1, operand1!!)
             outState.putBoolean(STATE_OPERAND_1_STORED, true)
         }
