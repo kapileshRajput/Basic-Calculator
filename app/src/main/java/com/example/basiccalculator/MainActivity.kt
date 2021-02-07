@@ -1,12 +1,15 @@
 package com.example.basiccalculator
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import java.lang.NumberFormatException
+import androidx.appcompat.app.AppCompatActivity
+
+private const val STATE_PENDING_OPERATION = "PendingOperation"
+private const val STATE_OPERAND_1 = "Operand1"
+private const val STATE_OPERAND_1_STORED = "Operand1_Stored"
 
 class MainActivity : AppCompatActivity() {
     private val result by lazy(LazyThreadSafetyMode.NONE) { findViewById<EditText>(R.id.result) }
@@ -96,5 +99,26 @@ class MainActivity : AppCompatActivity() {
             result.setText(operand1.toString())
             newNumber.setText("")
         }
+    }
+
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        operand1 = if (savedInstanceState.getBoolean(STATE_OPERAND_1_STORED, false)){
+            savedInstanceState.getDouble(STATE_OPERAND_1)
+        }else{
+            null
+        }
+        pendingOperation = savedInstanceState.getString(STATE_PENDING_OPERATION, "=")
+        displayOperation.text = pendingOperation
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        if (operand1 != null){
+            outState.putDouble(STATE_OPERAND_1, operand1!!)
+            outState.putBoolean(STATE_OPERAND_1_STORED, true)
+        }
+        outState.putString(STATE_PENDING_OPERATION, pendingOperation)
     }
 }
