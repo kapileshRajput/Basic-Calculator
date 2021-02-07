@@ -3,19 +3,14 @@ package com.example.basiccalculator
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_main.*
 
 private const val STATE_PENDING_OPERATION = "PendingOperation"
 private const val STATE_OPERAND_1 = "Operand1"
 private const val STATE_OPERAND_1_STORED = "Operand1_Stored"
 
 class MainActivity : AppCompatActivity() {
-    private val result by lazy(LazyThreadSafetyMode.NONE) { findViewById<EditText>(R.id.result) }
-    private val newNumber by lazy(LazyThreadSafetyMode.NONE) { findViewById<EditText>(R.id.newNumber) }
-    private val displayOperation by lazy(LazyThreadSafetyMode.NONE) { findViewById<TextView>(R.id.operation) }
-
     // variables to hold the operands and type of calculation
     private var operand1: Double? = null
     private var pendingOperation = "="
@@ -23,26 +18,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        // data input buttons
-        val button0 = findViewById<Button>(R.id.button0)
-        val button1 = findViewById<Button>(R.id.button1)
-        val button2 = findViewById<Button>(R.id.button2)
-        val button3 = findViewById<Button>(R.id.button3)
-        val button4 = findViewById<Button>(R.id.button4)
-        val button5 = findViewById<Button>(R.id.button5)
-        val button6 = findViewById<Button>(R.id.button6)
-        val button7 = findViewById<Button>(R.id.button7)
-        val button8 = findViewById<Button>(R.id.button8)
-        val button9 = findViewById<Button>(R.id.button9)
-        val buttonDot = findViewById<Button>(R.id.buttonDot)
-
-        // operations buttons
-        val buttonDivide = findViewById<Button>(R.id.buttonDivide)
-        val buttonEquals = findViewById<Button>(R.id.buttonEquals)
-        val buttonMinus = findViewById<Button>(R.id.buttonMinus)
-        val buttonMultiply = findViewById<Button>(R.id.buttonMultiply)
-        val buttonPlus = findViewById<Button>(R.id.buttonPlus)
 
         val listener = View.OnClickListener {
             val clickedButton = it as Button
@@ -70,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                 newNumber.setText("")
             }
             pendingOperation = clickedOperation
-            displayOperation.text = pendingOperation
+            operation.text = pendingOperation
         }
 
         buttonDivide.setOnClickListener(opLlistener)
@@ -110,7 +85,7 @@ class MainActivity : AppCompatActivity() {
             null
         }
         pendingOperation = savedInstanceState.getString(STATE_PENDING_OPERATION, "=")
-        displayOperation.text = pendingOperation
+        operation.text = pendingOperation
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
